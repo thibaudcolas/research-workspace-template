@@ -1,0 +1,198 @@
+# ---------------------------------------------------------------------------
+# MkDocs configuration.
+#
+# Docs: https://www.mkdocs.org/user-guide/configuration/
+# Material theme: https://squidfunk.github.io/mkdocs-material/
+#
+# Convention: most changes to `markdown_extensions`, `plugins`, and theme `features` need a comment explaining what the option does.
+# ---------------------------------------------------------------------------
+
+site_name: Project workspace
+# Replace `OWNER/REPO` with the real GitHub slug.
+repo_url: https://github.com/OWNER/REPO
+site_url: https://OWNER.github.io/REPO/
+docs_dir: docs
+# "Edit on GitHub" links point to the source Markdown on the main branch.
+edit_uri: edit/main/docs
+
+site_description: A shared workspace for project documentation.
+repo_name: REPO
+# Avoid clashes with other docs servers running on the default 8000 port.
+dev_addr: localhost:8001
+
+theme:
+  name: material
+  # Disable Google Fonts downloads – fonts are bundled locally so the site
+  # works without external requests.
+  font: false
+  logo: theme/favicon.png
+  favicon: theme/favicon.png
+  palette:
+    # Light and dark palettes, each tied to the system preference so the
+    # site matches the reader's OS by default but can still be toggled.
+    # Custom colors live in theme.css; both schemes are tuned for comfortable contrast over long reading sessions.
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    # ---- Code blocks ----
+    # "Copy" button on fenced code blocks.
+    - content.code.copy
+    # Allow `# (1)` style annotations inside fenced code blocks. See
+    # https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#code-annotations
+    - content.code.annotate
+    # ---- Page actions ----
+    # "Edit this page" button on every page, paired with `edit_uri` above.
+    # Makes it one click to open the Markdown source for a fix.
+    - content.action.edit
+    # "View source" button showing the rendered Markdown file on GitHub,
+    # so readers can see the source as it appears in the repo.
+    - content.action.view
+    # ---- Tabbed content blocks ----
+    # Share selected state across tabbed blocks on a page: switching a tab in
+    # one place switches the matching tab elsewhere. Requires the
+    # `pymdownx.tabbed` extension (enabled below).
+    - content.tabs.link
+    # ---- Reading experience ----
+    # Smooth scrolling and a small progress bar at the top of the page;
+    # `instant` loads pages without a full reload.
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    # Top-level navigation renders as tabs; the active tab stays visible.
+    - navigation.tabs
+    - navigation.tabs.sticky
+    # Top-level groups render as sections; auto-expand active section.
+    - navigation.sections
+    - navigation.expand
+    # Breadcrumb path under the header.
+    - navigation.path
+    # The first item in a section (a `README.md` index page) renders as the
+    # section landing page rather than a duplicate entry.
+    - navigation.indexes
+    # "Back to top" button on long pages.
+    - navigation.top
+    # Prev/next links in the footer.
+    - navigation.footer
+    # Update the browser URL with the active anchor as the reader scrolls,
+    # so deep links land on the right section.
+    - navigation.tracking
+    # Right-side table of contents auto-scrolls to follow the active heading.
+    - toc.follow
+    # Render hover tooltips where authors use `abbr` or inline definitions.
+    - content.tooltips
+    # ---- Search ----
+    - search.highlight
+    - search.suggest
+    - search.share
+  custom_dir: docs/theme
+
+extra_css:
+  - theme/theme.css
+
+markdown_extensions:
+  # Python-Markdown core extensions.
+  - abbr
+  - admonition
+  # Lets us attach `{ .class }` to block/inline elements – used by
+  # annotations and a few callouts.
+  - attr_list
+  - def_list
+  - footnotes
+  # Allow Markdown to be written inside HTML blocks (used by custom theme
+  # overrides in `docs/theme`).
+  - md_in_html
+  - sane_lists
+  - toc:
+      permalink: true
+
+  # PyMdown Extensions.
+  # Collapsible `??? note` / `!!! note` admonitions.
+  - pymdownx.details
+  # Syntax highlighting in fenced code blocks; `anchor_linenums` makes line
+  # numbers linkable so we can point at a specific line.
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  # Inline code highlighting: `` `!python function() `` is highlighted inline.
+  - pymdownx.inlinehilite
+  # Auto-link bare URLs and turn `owner/repo#123` shorthand into GitHub
+  # issue/PR links.
+  - pymdownx.magiclink
+  # Pulls in snippet files; `auto_append` attaches `abbreviations.md` to
+  # every page so abbreviation tooltips work everywhere.
+  - pymdownx.snippets:
+      base_path: docs
+      auto_append:
+        - contributing/abbreviations.md
+  # Tabbed content blocks: `=== "Tab title"`. Requires the
+  # `content.tabs.link` theme feature to share state across tab groups.
+  - pymdownx.tabbed:
+      alternate_style: true
+  # Extended fenced code: allows nested code blocks inside admonitions and
+  # other constructs where the standard fence would fail.
+  - pymdownx.superfences
+  # `- [x]` checkboxes render as styled checkboxes.
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  # `~~strikethrough~~` and `~sub~`/`~sup~` shortcuts.
+  - pymdownx.tilde
+
+plugins:
+  - search
+  # Show the last-modified date of each page based on git history.
+  - git-revision-date-localized:
+      type: date
+      # Use the build date for files not yet committed, so `--strict`
+      # builds pass for new pages.
+      fallback_to_build_date: true
+  # Generate `llms.txt` / `llms-full.txt` for LLM consumption. Keep the
+  # `sections` mapping in sync with `nav` below.
+  - llmstxt:
+      full_output: llms-full.txt
+      sections:
+        Home:
+          - index.md
+        Contributing:
+          - contributing/*.md
+        Knowledge base:
+          - knowledge-base/*.md
+        Project A:
+          - project-a/*.md
+  # Page tagging: tags declared in front matter (e.g. `tags: [draft, policy]`)
+  # are collected into a tag index page. Add or customize in `mkdocs-features.md`. Tag listings render at
+  # `/tags/` in the built site.
+  - tags
+
+# Treat structural mistakes as warnings, so `--strict` builds fail on them.
+validation:
+  nav:
+    # Every docs page must be in nav, or marked with `not_in_nav` front
+    # matter.
+    omitted_files: warn
+    absolute_links: warn
+  links:
+    absolute_links: warn
+    unrecognized_links: warn
+    anchors: warn
+
+nav:
+  - Home: index.md
+  - Contributing:
+      - contributing/README.md
+      - Documentation style guide: contributing/style-guide.md
+      - Quality assurance: contributing/quality-assurance.md
+      - Project architecture: contributing/architecture.md
+      - Abbreviations: contributing/abbreviations.md
+  - Knowledge base:
+      - knowledge-base/README.md
+  - Project A:
+      - project-a/README.md

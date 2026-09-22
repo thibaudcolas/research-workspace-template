@@ -1,0 +1,15 @@
+# Link checking configuration for lychee – https://lychee.cli.rs
+# Run locally with `just check-links`; also runs in CI.
+
+# Sites that block automated checks (401/403/bot detection).
+exclude = [
+  'https://x\.com/.*',
+  'https://www\.linkedin\.com/.*',
+  # Add here: known-broken sources in different files (mention which)
+]
+
+# Theme templates contain Jinja placeholders, not real links.
+exclude_path = ["docs/theme"]
+
+# Accept rate limiting as a non-failure (retries were already attempted).
+accept = [200, 204, 429]

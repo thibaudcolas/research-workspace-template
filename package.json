@@ -1,0 +1,13 @@
+{
+  "name": "project-workspace",
+  "version": "0.0.0-dev",
+  "description": "A shared workspace for project documentation.",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "3.9.4"
+  },
+  "scripts": {
+    "lint": "prettier --check '**/*.{md,css,scss,js,json,jsonc,yaml,yml,html}'",
+    "format": "prettier --write '**/*.{md,css,scss,js,json,jsonc,yaml,yml,html}'"
+  }
+}
