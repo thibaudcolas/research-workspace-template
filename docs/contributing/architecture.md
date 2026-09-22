@@ -28,7 +28,7 @@ The Markdown-facing syntax for these features is documented in the [style guide]
 
 ## Continuous integration
 
-[`.github/workflows/ci.yml`](https://github.com/OWNER/REPO/blob/main/.github/workflows/ci.yml) runs on every push to `main` and on pull requests:
+[`.github/workflows/ci.yml`](https://github.com/thibaudcolas/research-workspace-template/blob/main/.github/workflows/ci.yml) runs on every push to `main` and on pull requests:
 
 - Python linting and formatting checks (`ruff`), type checking (`mypy`, `ty`).
 - Non-Python formatting checks (`prettier`).

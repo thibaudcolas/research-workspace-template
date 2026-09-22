@@ -8,9 +8,9 @@
 # ---------------------------------------------------------------------------
 
 site_name: Project workspace
-# Replace `OWNER/REPO` with the real GitHub slug.
-repo_url: https://github.com/OWNER/REPO
-site_url: https://OWNER.github.io/REPO/
+# Replace `thibaudcolas/research-workspace-template` with the real GitHub slug.
+repo_url: https://github.com/thibaudcolas/research-workspace-template
+site_url: https://thibaudcolas.github.io/research-workspace-template/
 docs_dir: docs
 # "Edit on GitHub" links point to the source Markdown on the main branch.
 edit_uri: edit/main/docs
@@ -124,8 +124,7 @@ markdown_extensions:
       pygments_lang_class: true
   # Inline code highlighting: `` `!python function() `` is highlighted inline.
   - pymdownx.inlinehilite
-  # Auto-link bare URLs and turn `owner/repo#123` shorthand into GitHub
-  # issue/PR links.
+  # Auto-link bare URLs and turn GitHub issues shorthand into issue/PR links.
   - pymdownx.magiclink
   # Pulls in snippet files; `auto_append` attaches `abbreviations.md` to
   # every page so abbreviation tooltips work everywhere.

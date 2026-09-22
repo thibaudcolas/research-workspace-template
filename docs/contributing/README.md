@@ -15,7 +15,7 @@ See [Project architecture](architecture.md) for how the workspace and its toolin
 Clone the repository, configure the git hooks, then initialize with `just init`.
 
 ```sh
-git clone git@github.com:OWNER/REPO.git
+git clone git@github.com:thibaudcolas/research-workspace-template.git
 cd REPO/
 # Install everything.
 just init

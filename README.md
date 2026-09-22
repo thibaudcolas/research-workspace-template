@@ -47,7 +47,7 @@ just check-links  # Link check (requires lychee)
 When starting a new project from this template:
 
 1. Rename the project in `pyproject.toml`, `package.json`, and `README.md`.
-2. Set `repo_url`, `site_url`, `repo_name` in `mkdocs.yml` (search for `OWNER/REPO` placeholders).
+2. Set `repo_url`, `site_url`, `repo_name` in `mkdocs.yml` (search for `thibaudcolas/research-workspace-template` placeholders).
 3. Replace `docs/` placeholder content with real content, and update `nav` plus the `llmstxt` `sections` in `mkdocs.yml` to match.
 4. Update `site_name`, `site_description`, logos, and favicon in `docs/theme/`.
 5. Enable GitHub Pages from GitHub Actions in the repository settings (the workflow deploys on push to `main`).

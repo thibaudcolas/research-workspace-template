@@ -49,4 +49,4 @@ print("Hello")
 
 Link to other docs pages with relative Markdown links (`[Contributing](../contributing/README.md)`). Never use absolute site URLs — the strict build fails on them.
 
-[Bulleted lists]: https://developers.google.com/tech-writing/one/lists
+[Bulleted lists]: https://developers.google.com/tech-writing/one/lists-and-tables
