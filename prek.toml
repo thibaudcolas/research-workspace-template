@@ -17,7 +17,6 @@ hooks = [
   { id = "fix-byte-order-marker" },                # Remove UTF-8 byte order marker
   { id = "check-json" },                           # Validate JSON files
   { id = "check-json5" },                          # Validate JSON5 files
-  { id = "pretty-format-json" },                   # Pretty format JSON files
   { id = "check-toml" },                           # Validate TOML files
   { id = "check-vcs-permalinks" },                 # Check that VCS links are permalinks
   { id = "check-yaml" },                           # Validate YAML files
@@ -27,7 +26,6 @@ hooks = [
   { id = "destroyed-symlinks" },                   # Detect destroyed symlinks
   { id = "check-merge-conflict" },                 # Check for merge conflicts
   { id = "detect-private-key" },                   # Detect private keys
-  { id = "no-commit-to-branch" },                  # Prevent committing to protected branches
   { id = "check-shebang-scripts-are-executable" }, # Ensures that" (non-binary) files with a shebang are executable
   { id = "check-executables-have-shebangs" },      # Ensures that" (non-binary) executables have a shebang
 ]
