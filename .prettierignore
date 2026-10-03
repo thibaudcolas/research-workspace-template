@@ -1,0 +1,7 @@
+# Generated documentation, environments, and tool caches.
+site/
+.venv/
+.mypy_cache/
+.ruff_cache/
+# Prettier rewrites Python-Markdown abbreviation definitions as emphasis.
+docs/contributing/abbreviations.md

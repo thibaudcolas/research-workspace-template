@@ -12,6 +12,15 @@ site_name: Project workspace
 repo_url: https://github.com/thibaudcolas/research-workspace-template
 site_url: https://thibaudcolas.github.io/research-workspace-template/
 docs_dir: docs
+# Shared abbreviation definitions are read by snippets, not rendered as a page.
+exclude_docs: |
+  /contributing/abbreviations.md
+# Publish raw skills and discovery catalogs after rendering the documentation.
+hooks:
+  - scripts/publish_skills.py
+# Rebuild the catalogs when skills or their supporting resources change locally.
+watch:
+  - .agents/skills
 # "Edit on GitHub" links point to the source Markdown on the main branch.
 edit_uri: edit/main/docs
 
@@ -22,8 +31,7 @@ dev_addr: localhost:8001
 
 theme:
   name: material
-  # Disable Google Fonts downloads – fonts are bundled locally so the site
-  # works without external requests.
+  # Use system fonts without requesting fonts from Google.
   font: false
   logo: theme/favicon.png
   favicon: theme/favicon.png
@@ -146,6 +154,8 @@ markdown_extensions:
   - pymdownx.tilde
 
 plugins:
+  # Apply shared front matter from each section's .meta.yml before indexing pages.
+  - meta
   - search
   # Show the last-modified date of each page based on git history.
   - git-revision-date-localized:
@@ -160,22 +170,25 @@ plugins:
       sections:
         Home:
           - index.md
+          - agent-skills.md
+          - tags.md
         Contributing:
-          - contributing/*.md
+          # List pages explicitly so the abbreviation snippet is not exported.
+          - contributing/README.md
+          - contributing/style-guide.md
+          - contributing/quality-assurance.md
+          - contributing/architecture.md
         Knowledge base:
           - knowledge-base/*.md
         Project A:
           - project-a/*.md
-  # Page tagging: tags declared in front matter (e.g. `tags: [draft, policy]`)
-  # are collected into a tag index page. Add or customize in `mkdocs-features.md`. Tag listings render at
-  # `/tags/` in the built site.
+  # Collect page and folder tags into the listing marked in tags.md.
   - tags
 
 # Treat structural mistakes as warnings, so `--strict` builds fail on them.
 validation:
   nav:
-    # Every docs page must be in nav, or marked with `not_in_nav` front
-    # matter.
+    # Every docs page must be in nav or matched by the top-level not_in_nav setting.
     omitted_files: warn
     absolute_links: warn
   links:
@@ -185,12 +198,13 @@ validation:
 
 nav:
   - Home: index.md
+  - Agent skills: agent-skills.md
+  - Tags: tags.md
   - Contributing:
       - contributing/README.md
       - Documentation style guide: contributing/style-guide.md
       - Quality assurance: contributing/quality-assurance.md
       - Project architecture: contributing/architecture.md
-      - Abbreviations: contributing/abbreviations.md
   - Knowledge base:
       - knowledge-base/README.md
   - Project A:

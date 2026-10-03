@@ -1,3 +1,8 @@
+---
+search:
+  boost: 1.5
+---
+
 # Contribution guidelines
 
 Thank you for considering to help this project.
@@ -29,6 +34,7 @@ just init
 - `just format *paths="."`: Format project files.
 - `just check-links`: Check links in all Markdown files.
 - `just build-docs`: Build the documentation.
+- `just test`: Test agent skill publishing.
 - `just docs`: Build the documentation and serve it locally.
 
 ## Coding style & conventions
@@ -71,7 +77,14 @@ Every docs page must be listed in `nav`, or explicitly opted out:
 
 - Working drafts are published like any other page, with a draft-status callout at the top (see the [style guide](style-guide.md#callouts-and-blockquotes)).
 - Files that aren't pages (snippet sources like `contributing/abbreviations.md`) are listed in `exclude_docs`.
-- Anything else outside `nav` needs `not_in_nav: true` front matter.
+- Pages intentionally published outside `nav` must match the top-level `not_in_nav` setting in `mkdocs.yml`, which accepts file patterns relative to `docs/`:
+
+```yaml
+not_in_nav: |
+  /project-a/supporting-notes.md
+```
+
+This only suppresses navigation warnings; the page remains published and searchable. Use the [search controls](style-guide.md#search-controls) to adjust search separately.
 
 Run `just build-docs` to check your changes – it builds with `--strict`, so missing nav entries, unresolved links, and broken anchors fail the build.
 

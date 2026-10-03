@@ -33,6 +33,10 @@ check-links:
 build-docs:
     NO_MKDOCS_2_WARNING=1 uv run mkdocs build --strict
 
+# Test skill publishing, including generated URLs and bundled resources.
+test:
+    uv run python -m unittest discover -s tests
+
 # Build the documentation and serve it locally.
 docs:
     NO_MKDOCS_2_WARNING=1 uv run mkdocs serve --strict

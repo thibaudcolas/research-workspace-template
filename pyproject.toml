@@ -13,9 +13,13 @@ dev = [
   "ty>=0.0.24",
   # Documentation.
   "mkdocs>=1.6.0",
-  "mkdocs-material>=9.5.0",
+  # Breadcrumbs and instant prefetching require Material 9.7 or later.
+  "mkdocs-material>=9.7.0",
   "mkdocs-llmstxt>=0.5.0",
   "mkdocs-git-revision-date-localized-plugin>=1.2.0",
+  # Skill metadata parsing and its type annotations.
+  "pyyaml>=6.0",
+  "types-pyyaml>=6.0",
 ]
 
 [tool.ruff]

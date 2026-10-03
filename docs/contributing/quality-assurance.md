@@ -15,3 +15,12 @@ What belongs in each content layer, and the checks content must pass before publ
 - **Strict build** (`just build-docs`): fails on missing nav entries, broken anchors, and unresolved links.
 - **Link check** (`just check-links`): validates external links in all Markdown files.
 - **Formatting** (`just lint`): ruff, prettier, mypy, ty.
+
+When changing documentation features, also inspect the generated output:
+
+- Open `site/tags/index.html` and follow a tag link to confirm folder and page tags appear in the listing.
+- Check `site/search/search_index.json` when changing search settings: excluded pages should be absent and boosted pages should carry the intended value.
+- Check `site/llms-full.txt` for new documentation pages, keeping `nav` and `llmstxt.sections` in sync.
+- Confirm abbreviation definitions do not appear as stray text, and that abbreviations in prose render with their expansions.
+
+For layout changes, inspect the narrow-screen view and keyboard navigation with `just docs`. Check that links remain descriptive and content stays readable in both color schemes.

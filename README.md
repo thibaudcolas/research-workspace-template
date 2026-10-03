@@ -24,8 +24,9 @@ Configured in `mkdocs.yml` (each option commented inline):
 
 - Light/dark themes with a custom local color palette (`docs/theme/theme.css`).
 - Last-modified dates from git history per page.
-- Tag index: `tags:` front matter collects pages at `/tags/`.
+- [Tag index](docs/tags.md): page tags and shared folder metadata group related documentation.
 - `llms.txt` / `llms-full.txt` generation for LLM consumption.
+- [Agent skill publishing](docs/agent-skills.md), with raw skill files and discovery catalogs under `.well-known/`.
 - Abbreviation tooltips: `docs/contributing/abbreviations.md` is auto-appended to every page.
 - Strict link and nav validation: pages must be in `nav` or opted out; broken anchors fail the build.
 
@@ -38,6 +39,7 @@ just init      # Install dependencies, set up hooks
 just docs      # Serve the docs locally on http://localhost:8001
 just build-docs  # Strict build (what CI runs)
 just lint      # ruff + mypy + ty + prettier checks
+just test      # Skill publishing tests
 just format    # Auto-format
 just check-links  # Link check (requires lychee)
 ```
@@ -51,6 +53,7 @@ When starting a new project from this template:
 3. Replace `docs/` placeholder content with real content, and update `nav` plus the `llmstxt` `sections` in `mkdocs.yml` to match.
 4. Update `site_name`, `site_description`, logos, and favicon in `docs/theme/`.
 5. Enable GitHub Pages from GitHub Actions in the repository settings (the workflow deploys on push to `main`).
+6. Adapt the starter skill in `.agents/skills/research-workspace/` to your workspace. Every skill in `.agents/skills/` is published with the docs.
 
 ## License
 
