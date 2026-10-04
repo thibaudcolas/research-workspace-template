@@ -132,12 +132,14 @@ markdown_extensions:
       pygments_lang_class: true
   # Inline code highlighting: `` `!python function() `` is highlighted inline.
   - pymdownx.inlinehilite
-  # Auto-link bare URLs and turn GitHub issues shorthand into issue/PR links.
+  # Auto-link bare URLs. Use explicit Markdown links for issues and pull requests.
   - pymdownx.magiclink
   # Pulls in snippet files; `auto_append` attaches `abbreviations.md` to
   # every page so abbreviation tooltips work everywhere.
   - pymdownx.snippets:
       base_path: docs
+      # Missing includes must fail the build instead of silently dropping content.
+      check_paths: true
       auto_append:
         - contributing/abbreviations.md
   # Tabbed content blocks: `=== "Tab title"`. Requires the
@@ -150,7 +152,7 @@ markdown_extensions:
   # `- [x]` checkboxes render as styled checkboxes.
   - pymdownx.tasklist:
       custom_checkbox: true
-  # `~~strikethrough~~` and `~sub~`/`~sup~` shortcuts.
+  # `~~strikethrough~~` and `~subscript~` shortcuts.
   - pymdownx.tilde
 
 plugins:

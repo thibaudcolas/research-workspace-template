@@ -6,6 +6,7 @@ How to write docs pages and posts for this workspace: tone, headings, callouts, 
 
 - Write concise, direct, factual content in **Sentence case** (no Title Case for headings or titles).
 - Use American English spelling.
+- Run `just lint-prose` for the small set of automated terminology and spelling checks. See [Prose rules](quality-assurance.md#prose-rules) for scope and quotation exceptions.
 - Prefer linking to other pages over repeating content.
 - Use [Bulleted lists] when describing more than two comparable things or steps.
 - One thing per paragraph; don't be afraid of whitespace.

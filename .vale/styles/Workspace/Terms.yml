@@ -1,0 +1,11 @@
+extends: substitution
+message: "Use '%s' instead of '%s'."
+level: error
+ignorecase: true
+swap:
+  github: GitHub
+  javascript: JavaScript
+  markdown: Markdown
+  mkdocs: MkDocs
+  pymdown: PyMdown
+  typescript: TypeScript

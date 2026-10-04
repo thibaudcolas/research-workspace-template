@@ -1,0 +1,28 @@
+name: External links
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    # Sources can disappear even when no documentation changes.
+    - cron: "23 7 * * 1"
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-26.04-arm
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --scheme http --scheme https --no-progress --hidden .
+          # Keep failures visible in the job summary without blocking deployment.
+          format: markdown
+          jobSummary: true
+          output: ${{ runner.temp }}/external-links.md

@@ -15,7 +15,7 @@ See [Project architecture](architecture.md) for how the workspace and its toolin
 
 ### Installation
 
-> Requirements: [`uv`](https://github.com/astral-sh/uv), [just](https://github.com/casey/just), [prek](https://prek.j178.dev/), [lychee](https://lychee.cli.rs/)
+> Requirements: [`uv`](https://github.com/astral-sh/uv), [Node.js and npm](https://nodejs.org/en/download) (use the version in `.node-version`), [just](https://github.com/casey/just), [prek](https://prek.j178.dev/), [lychee](https://lychee.cli.rs/)
 
 Clone the repository, configure the git hooks, then initialize with `just init`.
 
@@ -26,15 +26,19 @@ cd REPO/
 just init
 ```
 
+Initialization installs Python and npm dependencies and downloads the pinned Vale binary for prose checks. This first run requires network access; the checked-in Vale rules need no separate style download.
+
 ### Commands
 
 - `just help`: See what commands are available.
 - `just init`: Install dependencies and initialize for development.
 - `just lint`: Lint the project.
+- `just lint-prose`: Check prose terminology and common American English spellings with Vale.
 - `just format *paths="."`: Format project files.
-- `just check-links`: Check links in all Markdown files.
+- `just check-links`: Check local links without network access.
+- `just check-external-links`: Check HTTP(S) sources separately.
 - `just build-docs`: Build the documentation.
-- `just test`: Test agent skill publishing.
+- `just test`: Test agent skill publishing and documentation rendering.
 - `just docs`: Build the documentation and serve it locally.
 
 ## Coding style & conventions
@@ -92,9 +96,9 @@ Run `just build-docs` to check your changes – it builds with `--strict`, so mi
 
 1. Create a branch from `main` with a descriptive name.
 2. Make your changes, following the coding style and testing guidelines above.
-3. Run `just lint` and `just check-links` locally to verify everything passes.
+3. Run `just lint`, `just check-links`, `just build-docs`, and `just test` locally. Run `just check-external-links` when adding or updating sources.
 4. Open a pull request with a clear description of what the change does and why. Include relevant test evidence (commands and their output) and links to related issues.
-5. CI will run linting (ruff, mypy, ty, prettier), link checking, and a strict documentation build. All checks must pass before merging.
+5. CI runs linting (ruff, mypy, ty, prettier, Vale), local link checking, tests, and a strict documentation build. External links run in a separate workflow; investigate failures as broken or unverified sources. That workflow also runs weekly and does not gate deployment.
 6. Squash merge when approved. Keep the commit message concise, in the imperative mood, and using Sentence case (no Title Case).
 
 ## Support guidelines

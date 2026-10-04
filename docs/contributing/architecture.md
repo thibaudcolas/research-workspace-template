@@ -23,7 +23,7 @@ The site is built with [MkDocs](https://www.mkdocs.org/) and the [Material for M
 - **Tag index** – the `tags` plugin collects page and folder tags into `tags.json` and renders the listing marker in the [Tags page](../tags.md). See the [style guide](style-guide.md#tags) for authoring syntax.
 - **`llms-full.txt`** – the `mkdocs-llmstxt` plugin concatenates select pages into `llms-full.txt` at the site root, so LLMs and agents can ingest the workspace in one file. The plugin's `sections` key in `mkdocs.yml` mirrors `nav`; keep both in sync when adding or removing sections.
 - **Abbreviation tooltips** – `contributing/abbreviations.md` is auto-appended to every page by `pymdownx.snippets`, so any abbreviation registered there is available as a hover tooltip across the site.
-- **Strict validation** – `mkdocs build --strict` (`just build-docs`) fails on pages missing from `nav`, broken anchors, unrecognized links, and root-relative links. Use file patterns in the top-level `not_in_nav` setting in `mkdocs.yml` for published pages intentionally omitted from navigation. Snippet sources are excluded from page generation with `exclude_docs`.
+- **Strict validation** – `mkdocs build --strict` (`just build-docs`) fails on pages missing from `nav`, broken anchors, unrecognized links, root-relative links, and missing snippets. Use file patterns in the top-level `not_in_nav` setting in `mkdocs.yml` for published pages intentionally omitted from navigation. Snippet sources are excluded from page generation with `exclude_docs`.
 
 The Markdown-facing syntax for these features is documented in the [style guide](style-guide.md); `mkdocs.yml` carries inline comments explaining each option.
 
@@ -37,5 +37,9 @@ The native MkDocs hook in `scripts/publish_skills.py` copies `.agents/skills/` t
 
 - Python linting and formatting checks (`ruff`), type checking (`mypy`, `ty`).
 - Non-Python formatting checks (`prettier`).
-- Link checking ([lychee](https://lychee.cli.rs), configured in `lychee.toml`).
+- Prose checks (Vale, configured in `.vale.ini` with repository-owned rules).
+- Local link checking ([lychee](https://lychee.cli.rs), configured in `lychee.toml`).
+- Rendering fixtures and agent skill publishing tests.
 - A strict documentation build, then upload and deployment of the built `site/` to GitHub Pages.
+
+Python dependencies are installed from the committed lockfile with `uv sync --locked --dev`. The separate workflow in `.github/workflows/external-links.yml` checks HTTP(S) sources on pull requests, pushes to `main`, a weekly schedule, and manual dispatch. Its failures are reported separately and do not block site deployment.

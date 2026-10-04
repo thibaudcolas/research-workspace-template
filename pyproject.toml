@@ -20,6 +20,8 @@ dev = [
   # Skill metadata parsing and its type annotations.
   "pyyaml>=6.0",
   "types-pyyaml>=6.0",
+  # Python wrapper downloads the matching Vale CLI on its first invocation.
+  "vale==3.22.0.0",
 ]
 
 [tool.ruff]
