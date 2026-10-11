@@ -6,7 +6,7 @@ What belongs in each content layer, and the checks content must pass before publ
 
 - Factual claims link to a source.
 - Pages follow the [documentation style guide](style-guide.md).
-- `just lint`, `just check-links`, `just build-docs`, and `just test` pass.
+- `just check` passes (linting, local links, tests, and a strict documentation build).
 
 <!-- Adapt this page to your project's review process. The source workspace uses it to define what goes in each layer (knowledge base vs. project docs) and how drafts graduate to published pages. -->
 
@@ -35,7 +35,7 @@ When changing documentation features, also inspect the generated output:
 
 - Open `site/tags/index.html` and follow a tag link to confirm folder and page tags appear in the listing.
 - Check `site/search/search_index.json` when changing search settings: excluded pages should be absent and boosted pages should carry the intended value.
-- Check `site/llms-full.txt` for new documentation pages, keeping `nav` and `llmstxt.sections` in sync.
+- Export tests verify that every documentation page has a Markdown alternative and appears in `llms.txt` and `llms-full.txt`. Keep `nav` and `llmstxt.sections` in sync; intentional source exclusions are documented in `EXPORT_EXCLUSIONS` in `tests/test_docs.py`.
 - Confirm abbreviation definitions do not appear as stray text, and that abbreviations in prose render with their expansions.
 
 For layout changes, inspect the narrow-screen view and keyboard navigation with `just docs`. Check that links remain descriptive and content stays readable in both color schemes.

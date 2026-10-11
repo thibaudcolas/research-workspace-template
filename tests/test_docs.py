@@ -14,10 +14,16 @@ import yaml
 from mkdocs.commands.build import build
 from mkdocs.config import load_config
 from mkdocs.config.defaults import MkDocsConfig
+from mkdocs.structure.files import InclusionLevel, get_files
 from pymdownx.snippets import SnippetMissingError  # type: ignore[import-untyped]
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = Path(__file__).parent / "fixtures"
+# Source-only Markdown must be excluded deliberately, with a reason. Published
+# pages, including those outside nav, must have Markdown exports.
+EXPORT_EXCLUSIONS = {
+    "contributing/abbreviations.md": "Shared snippet definitions, not a page.",
+}
 VOID_ELEMENTS = {
     "area",
     "base",
@@ -78,6 +84,7 @@ class DocumentationTests(unittest.TestCase):
     site: Path
     settings: dict[str, Any]
     document: Element
+    pages: dict[str, str]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -105,6 +112,15 @@ class DocumentationTests(unittest.TestCase):
                 if "llmstxt" in plugin:
                     plugin["llmstxt"]["sections"]["Test fixture"] = ["features.md"]
         config = cls.make_config()
+        files = get_files(config)
+        cls.pages = {
+            file.src_uri: file.dest_uri for file in files.documentation_pages()
+        }
+        # Unique source markers in temporary copies distinguish pages even when
+        # they have identical headings or content. Never modify the real docs.
+        for source in cls.pages:
+            path = cls.docs / source
+            path.write_text(path.read_text() + f"\n\n{cls.export_marker(source)}\n")
         build(config)
         page = Document((cls.site / "features/index.html").read_text()).root
         cls.document = next(page.iter("article"))
@@ -199,26 +215,81 @@ class DocumentationTests(unittest.TestCase):
             build(config)
 
     def test_markdown_alternatives_and_full_export(self) -> None:
+        self.assert_markdown_exports(self.site)
+        self.assertIn("research evidence", (self.site / "llms-full.txt").read_text())
+
+    @staticmethod
+    def export_marker(source: str) -> str:
+        return f"Export coverage marker: {source}."
+
+    def test_export_exclusions_are_explicit(self) -> None:
+        pages = get_files(self.make_config()).documentation_pages(
+            inclusion=InclusionLevel.all
+        )
+        excluded = {
+            file.src_uri
+            for file in pages
+            if file.inclusion in (InclusionLevel.EXCLUDED, InclusionLevel.DRAFT)
+        }
+        self.assertEqual(
+            excluded,
+            set(EXPORT_EXCLUSIONS),
+            "Document intentional source exclusions in EXPORT_EXCLUSIONS; "
+            "published pages must be exported.",
+        )
+
+    def assert_markdown_exports(self, site: Path) -> None:
         base_path = urlparse(self.settings["site_url"]).path
-        exported = (self.site / "llms-full.txt").read_text()
-        for relative in (
-            "index.html",
-            "contributing/style-guide/index.html",
-            "features/index.html",
+        exported = (site / "llms-full.txt").read_text()
+        index = (site / "llms.txt").read_text()
+        self.assertTrue(self.pages, "No documentation pages found for export checks")
+        for source, relative in self.pages.items():
+            document = Document((site / relative).read_text()).root
+            alternatives = [
+                node
+                for node in document.iter("link")
+                if node.get("rel") == "alternate"
+                and node.get("type", "").startswith("text/markdown")
+            ]
+            self.assertEqual(len(alternatives), 1, f"{source}: Markdown alternative")
+            href = alternatives[0].attrib["href"]
+            path = unquote(urlparse(href).path)
+            self.assertTrue(path.startswith(base_path), f"{source}: {href}")
+            target = site / path.removeprefix(base_path)
+            self.assertEqual(
+                target,
+                (site / relative).with_suffix(".md"),
+                f"{source}: Markdown alternative points to another page",
+            )
+            self.assertTrue(
+                target.is_file(),
+                f"{source}: Markdown alternative missing; update llmstxt.sections",
+            )
+            markdown = target.read_text()
+            self.assertIn(self.export_marker(source), markdown, f"{source}: raw export")
+            self.assertIn(f"]({href})", index, f"{source}: missing from llms.txt")
+            self.assertIn(
+                markdown, exported, f"{source}: content missing from llms-full.txt"
+            )
+
+    def test_export_check_detects_omitted_section(self) -> None:
+        config = self.make_config()
+        del config.plugins["llmstxt"].config["sections"]["Test fixture"]
+        site = Path(self.temp.name) / "omitted-section-site"
+        config.site_dir = str(site)
+        build(config)
+        with self.assertRaisesRegex(
+            AssertionError, r"features\.md: Markdown alternative missing"
         ):
-            with self.subTest(page=relative):
-                document = Document((self.site / relative).read_text()).root
-                alternatives = [
-                    node
-                    for node in document.iter("link")
-                    if node.get("rel") == "alternate"
-                    and node.get("type", "").startswith("text/markdown")
-                ]
-                self.assertEqual(len(alternatives), 1)
-                path = unquote(urlparse(alternatives[0].attrib["href"]).path)
-                self.assertTrue(path.startswith(base_path))
-                target = self.site / path.removeprefix(base_path)
-                self.assertTrue(target.is_file(), target)
-                heading = content(next(document.iter("h1"))).rstrip("¶")
-                self.assertIn(heading, exported)
-        self.assertIn("research evidence", exported)
+            self.assert_markdown_exports(site)
+
+    def test_export_check_detects_missing_full_content(self) -> None:
+        site = Path(self.temp.name) / "incomplete-export-site"
+        shutil.copytree(self.site, site)
+        full = site / "llms-full.txt"
+        fixture_markdown = (site / "features/index.md").read_text()
+        full.write_text(full.read_text().replace(fixture_markdown, ""))
+        with self.assertRaisesRegex(
+            AssertionError, r"features\.md: content missing from llms-full\.txt"
+        ):
+            self.assert_markdown_exports(site)

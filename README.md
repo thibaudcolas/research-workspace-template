@@ -37,10 +37,12 @@ Requirements: `uv`, `just`, `prek`, `lychee`, Node.js (`node-version` pins the v
 ```sh
 just init      # Install dependencies, set up hooks
 just docs      # Serve the docs locally on http://localhost:8001
+just check     # Lint, local links, tests, and strict docs build
 just build-docs  # Strict build (what CI runs)
 just lint      # ruff + mypy + ty + prettier checks
 just test      # Skill publishing tests
 just format    # Auto-format
+just format docs/index.md  # Format only the supplied paths
 just check-links  # Link check (requires lychee)
 ```
 

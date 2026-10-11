@@ -8,7 +8,7 @@ help:
 # Install dependencies and initialize for development.
 init:
     uv venv
-    uv sync --dev
+    uv sync --locked --dev
     npm ci
     uv run vale --version
     prek
@@ -26,11 +26,25 @@ lint:
 lint-prose:
     uv run vale README.md CONTRIBUTING.md AGENTS.md docs .agents/skills
 
-# Format project files.
+# Run all checks required before publishing.
+check: lint check-links test build-docs
+
+# Format project files, or only the supplied files and directories.
+[positional-arguments]
 format *paths=".":
-    uv run ruff check --fix {{ paths }}
-    uv run ruff format {{ paths }}
-    npm run format -- {{ paths }}
+    #!/usr/bin/env bash
+    set -euo pipefail
+    python_paths=()
+    for path in "$@"; do
+        if [[ -d "$path" || "$path" == *.py || "$path" == *.pyi ]]; then
+            python_paths+=("$path")
+        fi
+    done
+    if (( ${#python_paths[@]} )); then
+        uv run ruff check --fix -- "${python_paths[@]}"
+        uv run ruff format -- "${python_paths[@]}"
+    fi
+    npx --no-install prettier --write --ignore-unknown -- "$@"
 
 # Check local links without network access (requires lychee).
 check-links:

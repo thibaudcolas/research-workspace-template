@@ -11,6 +11,7 @@ Contributor and user docs are in `docs/`. Make sure `mkdocs.yml` (`nav` and `llm
 See [docs/contributing/README.md#commands](docs/contributing/README.md#commands) for the full list. Key recipes:
 
 - `just init` – install dependencies
+- `just check` – run linting, local link checks, tests, and the strict docs build
 - `just lint` – lint + type-check
 - `just format` – auto-format
 - `just check-links` – check links in Markdown files

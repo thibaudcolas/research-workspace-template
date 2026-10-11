@@ -26,15 +26,16 @@ cd REPO/
 just init
 ```
 
-Initialization installs Python and npm dependencies and downloads the pinned Vale binary for prose checks. This first run requires network access; the checked-in Vale rules need no separate style download.
+Initialization installs Python and npm dependencies from their committed lockfiles and downloads the pinned Vale binary for prose checks. This first run requires network access; the checked-in Vale rules need no separate style download.
 
 ### Commands
 
 - `just help`: See what commands are available.
 - `just init`: Install dependencies and initialize for development.
+- `just check`: Run linting, local link checks, tests, and the strict documentation build.
 - `just lint`: Lint the project.
 - `just lint-prose`: Check prose terminology and common American English spellings with Vale.
-- `just format *paths="."`: Format project files.
+- `just format *paths="."`: Format project files, or only the supplied files and directories. For example, `just format docs/index.md`; quote paths containing spaces.
 - `just check-links`: Check local links without network access.
 - `just check-external-links`: Check HTTP(S) sources separately.
 - `just build-docs`: Build the documentation.
@@ -75,6 +76,8 @@ The documentation site is built with [MkDocs](https://www.mkdocs.org/) from the 
 - **Navigation**: the `nav` key should list all pages of the site.
 - **llms.txt**: the `llmstxt` plugin's `sections` key lists the pages included in the generated `llms-full.txt`. Add new section landing pages there as well.
 
+Export tests check every documentation page, including pages outside navigation, against the generated Markdown files and catalogs. Keep intentional source exclusions in `EXPORT_EXCLUSIONS` in `tests/test_docs.py`, with a reason; snippet files such as the shared abbreviations are excluded because they are not pages.
+
 `mkdocs.yml` documents each option with an inline comment. The Markdown-facing syntax for features such as code annotations, tabbed blocks, or page tags is documented in the [documentation style guide](style-guide.md); the build-time behavior of each plugin is described in [Project architecture](architecture.md#documentation-build).
 
 Every docs page must be listed in `nav`, or explicitly opted out:
@@ -96,7 +99,7 @@ Run `just build-docs` to check your changes – it builds with `--strict`, so mi
 
 1. Create a branch from `main` with a descriptive name.
 2. Make your changes, following the coding style and testing guidelines above.
-3. Run `just lint`, `just check-links`, `just build-docs`, and `just test` locally. Run `just check-external-links` when adding or updating sources.
+3. Run `just check` locally. Run `just check-external-links` when adding or updating sources.
 4. Open a pull request with a clear description of what the change does and why. Include relevant test evidence (commands and their output) and links to related issues.
 5. CI runs linting (ruff, mypy, ty, prettier, Vale), local link checking, tests, and a strict documentation build. External links run in a separate workflow; investigate failures as broken or unverified sources. That workflow also runs weekly and does not gate deployment.
 6. Squash merge when approved. Keep the commit message concise, in the imperative mood, and using Sentence case (no Title Case).
